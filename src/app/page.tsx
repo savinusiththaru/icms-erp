@@ -1,66 +1,111 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useState, useEffect } from 'react';
+
+import { Users, FileText, Briefcase, CreditCard, TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import styles from './page.module.css';
 
 export default function Home() {
+  const [metrics, setMetrics] = useState({
+    revenue: 0,
+    employees: 0,
+    pendingInvoices: 0,
+    pendingAmount: 0,
+    quotations: 0
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [invoicesRes, employeesRes, quotationsRes] = await Promise.all([
+          fetch('/api/invoices'),
+          fetch('/api/employees'),
+          fetch('/api/quotations')
+        ]);
+
+        const invoices = await invoicesRes.json();
+        const employees = await employeesRes.json();
+        const quotations = await quotationsRes.json();
+
+        // Calculate Revenue (assuming all non-pending/cancelled are revenue, or simplified sum for now)
+        // In a real app, check for 'Paid' status. For now, assuming standard statuses.
+        const revenue = Array.isArray(invoices)
+          ? invoices.reduce((sum: number, inv: any) => sum + (inv.status === 'Paid' ? (inv.amount || 0) : 0), 0)
+          : 0;
+
+        const pendingInv = Array.isArray(invoices)
+          ? invoices.filter((inv: any) => inv.status === 'Pending')
+          : [];
+
+        const pendingAmount = pendingInv.reduce((sum: number, inv: any) => sum + (inv.amount || 0), 0);
+
+        setMetrics({
+          revenue,
+          employees: Array.isArray(employees) ? employees.length : 0,
+          pendingInvoices: pendingInv.length,
+          pendingAmount,
+          quotations: Array.isArray(quotations) ? quotations.length : 0
+        });
+
+      } catch (error) {
+        console.error('Failed to fetch dashboard data', error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Dashboard</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Welcome back, Admin User</p>
+      </div>
+
+      <div className={styles.grid}>
+        <div className={styles.metricCard}>
+          <div className={styles.metricTitle}>Total Revenue</div>
+          <div className={styles.metricValue}>LKR {metrics.revenue.toLocaleString()}</div>
+          <div className={`${styles.metricTrend} ${styles.trendUp}`}>
+            <TrendingUp size={16} />
+            <span>Updated just now</span>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className={styles.metricCard}>
+          <div className={styles.metricTitle}>Active Employees</div>
+          <div className={styles.metricValue}>{metrics.employees}</div>
+          <div className={`${styles.metricTrend} ${styles.trendUp}`}>
+            <Users size={16} />
+            <span>Total Staff</span>
+          </div>
         </div>
-      </main>
+
+        <div className={styles.metricCard}>
+          <div className={styles.metricTitle}>Pending Invoices</div>
+          <div className={styles.metricValue}>{metrics.pendingInvoices}</div>
+          <div className={styles.metricTrend} style={{ color: 'var(--text-muted)' }}>
+            <span>LKR {metrics.pendingAmount.toLocaleString()} outstanding</span>
+          </div>
+        </div>
+
+        <div className={styles.metricCard}>
+          <div className={styles.metricTitle}>Active Quotations</div>
+          <div className={styles.metricValue}>{metrics.quotations}</div>
+          <div className={styles.metricTrend} style={{ color: 'var(--text-muted)' }}>
+            <span>Open Projects/Leads</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>Recent Activity</div>
+        <div className={styles.activityList}>
+          <div style={{ padding: '16px', color: 'var(--text-muted)', textAlign: 'center' }}>
+            Real-time activity feed coming soon.
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
