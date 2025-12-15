@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Bell, Search, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import RoleSwitcher from './RoleSwitcher';
+
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -17,9 +17,6 @@ export default function Header() {
             </div>
 
             <div className={styles.right}>
-                <RoleSwitcher />
-                <div style={{ width: '1px', height: '24px', background: 'var(--border-light)' }}></div>
-
                 <button className={styles.iconButton} onClick={() => alert("Search functionality coming soon!")}>
                     <Search size={20} />
                 </button>

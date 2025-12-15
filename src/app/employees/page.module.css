@@ -92,3 +92,48 @@
     background-color: var(--bg-body);
     color: var(--primary);
 }
+
+.filterContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    padding: 8px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdownItem {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.dropdownItem:hover {
+    background-color: var(--bg-body);
+    color: var(--primary);
+}
+
+.dropdownItem.active {
+    background-color: #e0f2fe;
+    color: var(--primary);
+    font-weight: 500;
+}
