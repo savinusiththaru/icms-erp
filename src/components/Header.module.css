@@ -1,0 +1,94 @@
+.header {
+    height: 64px;
+    background-color: white;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-xl);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.iconButton {
+    padding: 8px;
+    border-radius: 50%;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.iconButton:hover {
+    color: var(--primary);
+    background-color: var(--background);
+}
+
+.dropdownContainer {
+    position: relative;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    padding: 8px;
+    z-index: 100;
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.dropdownItem:hover {
+    background-color: var(--background);
+}
+
+.userProfile {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 8px;
+}
+
+.userName {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.userRole {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
